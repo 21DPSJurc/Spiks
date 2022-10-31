@@ -1,0 +1,8 @@
+﻿  Spikotajs.cpp
+C:\Users\228to\source\repos\Eminems31\Eminems31\Spikotajs.cpp(16,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\228to\source\repos\Eminems31\Eminems31\Spikotajs.cpp(41,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 190 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Eminems31.vcxproj -> C:\Users\228to\source\repos\Eminems31\x64\Release\Eminems31.exe

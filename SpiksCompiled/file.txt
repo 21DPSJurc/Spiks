@@ -1,0 +1,1130 @@
+// C program to build the complete
+// snake game
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int i, j, height = 20, width = 20;
+int gameover, score;
+int x, y, fruitx, fruity, flag;
+
+// Function to generate the fruit
+// within the boundary
+void setup()
+{
+	gameover = 0;
+
+	// Stores height and width
+	x = height / 2;
+	y = width / 2;
+label1:
+	fruitx = rand() % 20;
+	if (fruitx == 0)
+		goto label1;
+label2:
+	fruity = rand() % 20;
+	if (fruity == 0)
+		goto label2;
+	score = 0;
+}
+
+// Function to draw the boundaries
+void draw()
+{
+	system("cls");
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width; j++) {
+			if (i == 0 || i == width - 1
+				|| j == 0
+				|| j == height - 1) {
+				printf("#");
+			}
+			else {
+				if (i == x && j == y)
+					printf("0");
+				else if (i == fruitx
+						&& j == fruity)
+					printf("*");
+				else
+					printf(" ");
+			}
+		}
+		printf("\n");
+	}
+
+	// Print the score after the
+	// game ends
+	printf("score = %d", score);
+	printf("\n");
+	printf("press X to quit the game");
+}
+
+// Function to take the input
+void input()
+{
+	if (kbhit()) {
+		switch (getch()) {
+		case 'a':
+			flag = 1;
+			break;
+		case 's':
+			flag = 2;
+			break;
+		case 'd':
+			flag = 3;
+			break;
+		case 'w':
+			flag = 4;
+			break;
+		case 'x':
+			gameover = 1;
+			break;
+		}
+	}
+}
+
+// Function for the logic behind
+// each movement
+void logic()
+{
+	sleep(0.01);
+	switch (flag) {
+	case 1:
+		y--;
+		break;
+	case 2:
+		x++;
+		break;
+	case 3:
+		y++;
+		break;
+	case 4:
+		x--;
+		break;
+	default:
+		break;
+	}
+
+	// If the game is over
+	if (x < 0 || x > height
+		|| y < 0 || y > width)
+		gameover = 1;
+
+	// If snake reaches the fruit
+	// then update the score
+	if (x == fruitx && y == fruity) {
+	label3:
+		fruitx = rand() % 20;
+		if (fruitx == 0)
+			goto label3;
+
+	// After eating the above fruit
+	// generate new fruit
+	label4:
+		fruity = rand() % 20;
+		if (fruity == 0)
+			goto label4;
+		score += 10;
+	}
+}
+
+// Driver Code
+void main()
+{
+	int m, n;
+
+	// Generate boundary
+	setup();
+
+	// Until the game is over
+	while (!gameover) {
+
+		// Function Call
+		draw();
+		input();
+		logic();
+	}
+}
+// A C++ Program to play tic-tac-toe
+
+#include<bits/stdc++.h>
+using namespace std;
+
+#define COMPUTER 1
+#define HUMAN 2
+
+#define SIDE 3 // Length of the board
+
+// Computer will move with 'O'
+// and human with 'X'
+#define COMPUTERMOVE 'O'
+#define HUMANMOVE 'X'
+
+// A function to show the current board status
+void showBoard(char board[][SIDE])
+{
+	printf("\n\n");
+	
+	printf("\t\t\t %c | %c | %c \n", board[0][0],
+							board[0][1], board[0][2]);
+	printf("\t\t\t--------------\n");
+	printf("\t\t\t %c | %c | %c \n", board[1][0],
+							board[1][1], board[1][2]);
+	printf("\t\t\t--------------\n");
+	printf("\t\t\t %c | %c | %c \n\n", board[2][0],
+							board[2][1], board[2][2]);
+
+	return;
+}
+
+// A function to show the instructions
+void showInstructions()
+{
+	printf("\t\t\t Tic-Tac-Toe\n\n");
+	printf("Choose a cell numbered from 1 to 9 as below"
+			" and play\n\n");
+	
+	printf("\t\t\t 1 | 2 | 3 \n");
+	printf("\t\t\t--------------\n");
+	printf("\t\t\t 4 | 5 | 6 \n");
+	printf("\t\t\t--------------\n");
+	printf("\t\t\t 7 | 8 | 9 \n\n");
+	
+	printf("-\t-\t-\t-\t-\t-\t-\t-\t-\t-\n\n");
+
+	return;
+}
+
+
+// A function to initialise the game
+void initialise(char board[][SIDE], int moves[])
+{
+	// Initiate the random number generator so that
+	// the same configuration doesn't arises
+	srand(time(NULL));
+	
+	// Initially the board is empty
+	for (int i=0; i<SIDE; i++)
+	{
+		for (int j=0; j<SIDE; j++)
+			board[i][j] = ' ';
+	}
+	
+	// Fill the moves with numbers
+	for (int i=0; i<SIDE*SIDE; i++)
+		moves[i] = i;
+
+	// randomise the moves
+	random_shuffle(moves, moves + SIDE*SIDE);
+	
+	return;
+}
+
+// A function to declare the winner of the game
+void declareWinner(int whoseTurn)
+{
+	if (whoseTurn == COMPUTER)
+		printf("COMPUTER has won\n");
+	else
+		printf("HUMAN has won\n");
+	return;
+}
+
+// A function that returns true if any of the row
+// is crossed with the same player's move
+bool rowCrossed(char board[][SIDE])
+{
+	for (int i=0; i<SIDE; i++)
+	{
+		if (board[i][0] == board[i][1] &&
+			board[i][1] == board[i][2] &&
+			board[i][0] != ' ')
+			return (true);
+	}
+	return(false);
+}
+
+// A function that returns true if any of the column
+// is crossed with the same player's move
+bool columnCrossed(char board[][SIDE])
+{
+	for (int i=0; i<SIDE; i++)
+	{
+		if (board[0][i] == board[1][i] &&
+			board[1][i] == board[2][i] &&
+			board[0][i] != ' ')
+			return (true);
+	}
+	return(false);
+}
+
+// A function that returns true if any of the diagonal
+// is crossed with the same player's move
+bool diagonalCrossed(char board[][SIDE])
+{
+	if (board[0][0] == board[1][1] &&
+		board[1][1] == board[2][2] &&
+		board[0][0] != ' ')
+		return(true);
+		
+	if (board[0][2] == board[1][1] &&
+		board[1][1] == board[2][0] &&
+		board[0][2] != ' ')
+		return(true);
+
+	return(false);
+}
+
+// A function that returns true if the game is over
+// else it returns a false
+bool gameOver(char board[][SIDE])
+{
+	return(rowCrossed(board) || columnCrossed(board)
+			|| diagonalCrossed(board) );
+}
+
+// A function to play Tic-Tac-Toe
+void playTicTacToe(int whoseTurn)
+{
+	// A 3*3 Tic-Tac-Toe board for playing
+	char board[SIDE][SIDE];
+	
+	int moves[SIDE*SIDE];
+	
+	// Initialise the game
+	initialise(board, moves);
+	
+	// Show the instructions before playing
+	showInstructions();
+	
+	int moveIndex = 0, x, y;
+	
+	// Keep playing till the game is over or it is a draw
+	while (gameOver(board) == false &&
+			moveIndex != SIDE*SIDE)
+	{
+		if (whoseTurn == COMPUTER)
+		{
+			x = moves[moveIndex] / SIDE;
+			y = moves[moveIndex] % SIDE;
+			board[x][y] = COMPUTERMOVE;
+			printf("COMPUTER has put a %c in cell %d\n",
+					COMPUTERMOVE, moves[moveIndex]+1);
+			showBoard(board);
+			moveIndex ++;
+			whoseTurn = HUMAN;
+		}
+		
+		else if (whoseTurn == HUMAN)
+		{
+			x = moves[moveIndex] / SIDE;
+			y = moves[moveIndex] % SIDE;
+			board[x][y] = HUMANMOVE;
+			printf ("HUMAN has put a %c in cell %d\n",
+					HUMANMOVE, moves[moveIndex]+1);
+			showBoard(board);
+			moveIndex ++;
+			whoseTurn = COMPUTER;
+		}
+	}
+
+	// If the game has drawn
+	if (gameOver(board) == false &&
+			moveIndex == SIDE * SIDE)
+		printf("It's a draw\n");
+	else
+	{
+		// Toggling the user to declare the actual
+		// winner
+		if (whoseTurn == COMPUTER)
+			whoseTurn = HUMAN;
+		else if (whoseTurn == HUMAN)
+			whoseTurn = COMPUTER;
+		
+		// Declare the winner
+		declareWinner(whoseTurn);
+	}
+	return;
+}
+
+// Driver program
+int main()
+{
+	// Let us play the game with COMPUTER starting first
+	playTicTacToe(COMPUTER);
+	
+	return (0);
+}
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+int rule(char p, char c){
+    if (p == c){
+        return 0;
+    }
+
+    if (p == 'r' && c == 'p'){
+        return -1;
+    }
+    else if (p == 's' && c == 'p'){
+        return 1;
+    }
+    else if (p == 'p' && c == 'r'){
+        return 1;
+    }
+    else if (p == 's' && c == 'r'){
+        return -1;
+    }
+    else if (p == 'r' && c == 's'){
+        return 1;
+    }
+    else if (p == 'p' && c == 's'){
+        return -1;
+    }
+}
+
+int main(){
+
+    char computer;
+    char player;
+    char playmore;
+    cout << "\t\t\t\t";
+    for(int i = 0; i < 50; i++){
+        cout << "-";
+    }
+    cout << endl;
+    cout << "\t\t\t\t";
+    cout << "\t Welcome to Rock, Paper and Scissors Game" << endl;
+    cout << "\t\t\t\t";
+    for(int i = 0; i < 50; i++){
+        cout << "-";
+    }
+    cout << endl;
+    cout << "\t\t\t\t";
+    cout << "\t Note: " << endl;
+    cout << "\t\t\t\t";
+    cout << "\t\t r : Rock" << endl << "\t\t\t\t" << "\t\t p - Paper" << endl << "\t\t\t\t" << "\t\t scissor" << endl << "\t\t\t\t"<< endl << endl;
+    cout << "\t\t\t\t";
+    for(int i = 0; i < 50; i++){
+        cout << "-";
+    }
+    cout << endl;
+    do{
+        int number = 0;
+        srand(time(0));        // initialized time to 0
+        number = rand() % 100; // will choose a number in range 0 - 99
+        // r - for rock
+        // p - for paper
+        // s - for scissors
+        if (number < 33)
+        {
+            computer = 'r';
+        }
+        else if (number > 66)
+        {
+            computer = 's';
+        }
+        else
+        {
+            computer = 'p';
+        }
+        // cout << "Note: \"r\" for \"Rock\", \"p\" for \"Paper\", \"s\" for \"Scissor\"." << endl;
+        cout << "\t\t\t\t";
+        cout << "Enter your choice: ";
+        cin >> player;
+        int result = rule(player, computer);
+        if(result == 1){
+            cout << "\t\t\t\t";
+            cout << "You won! Hurray" << endl;
+        }
+        else if(result == -1){
+            cout << "\t\t\t\t";
+            cout << "You lose! Bad Luck" << endl;
+        }
+        else{
+            cout << "\t\t\t\t";
+            cout << "Woah! That's Tie!" << endl;
+        }
+        cout << "\t\t\t\t";
+        cout << "Do you want to Play Again?" << endl;
+        cout << "\t\t\t\t";
+        cout << "Note: Press 'n' to exit! Press Anything to continue: ";
+        cin >> playmore;
+        cout << "\t\t\t\t";
+        for(int i = 0; i < 50; i++){
+            cout << "-";
+        }
+        cout << endl;
+    }while(playmore != 'n');
+
+    return 0;
+}
+void game()
+{
+    int key = 0, i, j, x, y;
+    int margin = 4; /* margin for clicking around the dots */
+	int LEFTMOUSE = 1, RIGHTMOUSE = 2;
+
+    while (key != 1)
+    {
+        while (!kbhit())
+        {
+            get_mouse_pos();
+            if (mousebutton == LEFTMOUSE)
+            {
+                for (i = 0, x = START_X; i < ROWS - 1; i++, x += BOX_WIDTH)
+                {
+                    for (j = 0, y = START_Y; j < ROWS; j++, y += BOX_HEIGHT)
+                    {
+                        if (mousex >= x - margin && mousex <= x + margin && mousey >= y - margin && mousey <= y + margin)
+                        {
+                            if (matrix_h[j][i] != 1)
+                            {
+                                matrix_h[j][i] = 1;
+                                line(x, y, x + BOX_WIDTH, y);
+                                player_lines[PLAYER - 1]++;
+                            }
+                        }
+                    }
+                }
+            }
+            if (mousebutton == RIGHTMOUSE)
+            {
+                for (i = 0, x = START_X; i < ROWS; i++, x += BOX_WIDTH)
+                {
+                    for (j = 0, y = START_Y; j < ROWS - 1; j++, y += BOX_HEIGHT)
+                    {
+                        if (mousex >= x - margin && mousex <= x + margin && mousey >= y - margin && mousey <= y + margin)
+                        {
+                            if (matrix_v[j][i] != 1)
+                            {
+                                matrix_v[j][i] = 1;
+                                line(x, y, x, y + BOX_HEIGHT);
+                                player_lines[PLAYER - 1]++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ii.h.ah = 0;
+        int86(22, &ii, &oo);
+        key = oo.h.ah;
+    }
+}
+#include <iostream>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+using namespace std;
+
+int createZombie() {
+    if (rand() % 67 < 10)
+        return 11;
+
+    else
+        return rand() % 10 + 1;
+}
+
+int main() {
+    srand(time(NULL));
+    char enter;
+
+    // game stats
+    int playerAlive = true;
+    int playerSkill = 9;
+    int playerScore = 1;
+    string playerName = "";
+    int zombieCount = 0;
+    int zombiesKilled = 0;
+
+    // title
+    cout << "Welcome to Zombie War." << endl << "Press [ENTER] to start.";
+    cin.get();
+
+    // player name
+    cout << "Please enter your name: ";
+    cin >> playerName;
+
+    // ask how many zombies
+    cout << "How many zombies do you wish to fight? ";
+    cin >> zombieCount;
+
+    cout << "Get ready to fight for your life, " << playerName << "!" << endl;
+
+    // main game loop
+    while (playerAlive && zombiesKilled < zombieCount) {
+        // create a random zombie
+        int zombieSkill = createZombie();
+
+        // battle sequence
+        if (zombieSkill > 10) {
+            cout << endl << "Here comes a huge zombie!" << endl;
+        }
+        else {
+            cout << endl << "Here comes zombie " << zombiesKilled + 1 << endl;
+        }
+
+        cout << "Fighting..." << endl;
+        sleep(2);
+
+        // zombie killed the player
+        if (playerSkill < zombieSkill) {
+            playerAlive = false;
+            cout << "You have died." << endl;
+        }
+
+        // player killed the zombie
+        else {
+            if (playerSkill - zombieSkill > 7) {
+                cout << "You wasted the zombie!" << endl;
+                playerScore = playerScore * 2;
+            }
+
+            else if (playerSkill - zombieSkill > 5) {
+                cout << "You decapitated the zombie!" << endl;
+                playerScore = playerScore * 2;
+            }
+
+            else if (playerSkill - zombieSkill > 0) {
+                cout << "You killed the zombie!" << endl;
+                playerScore = playerScore * 2;
+            }
+
+            else {
+                cout << "You killed the zombie, but suffered injuries." << endl;
+            }
+
+            zombiesKilled++;
+        }
+
+        cout << endl;
+        sleep(1);
+    }
+
+    // end game
+    if (zombiesKilled == zombieCount) {
+        // victory
+        cout << "You have survived the onslaught!" << endl;
+    }
+    else {
+        // lost
+        cout << "You did not survive the zombie war." << endl;
+    }
+
+    cout << "Zombies killed: " << zombiesKilled << endl;
+    cout << "Final score: " << playerScore << endl << endl;
+}
+ 
+#include <iostream>
+#include <windows.h>
+#include <conio.h>
+#include <time.h>
+using namespace std;
+int score,highscore;
+char retry='y';
+int main()
+{
+    cout <<endl;
+    cout <<endl;
+    cout <<"  ***** *   *  ***  *   * *****\n";
+    cout <<"  *     **  * *   * * *   *\n";
+    cout <<"  ***** * * * ***** **    ***\n";
+    cout <<"      * *  ** *   * * *   *\n";
+    cout <<"  ***** *   * *   * *   * ******\n";
+    cout <<endl;
+    cout <<" Press Any Key to Continue"<<endl;
+    getch();
+    while (retry=='y' || retry == 'Y')
+    {
+    srand(time(NULL));
+    score=0;
+    int pion=(rand()-1)%18+1;//random letak awal makanan
+    int poin=(rand()-1)%18+1;
+    int x[100];//asumsikan panjang snake tidak lebih dari 100
+    int y[100];
+    x[0]=10;//declare letak awal snake
+    y[0]=10;
+    x[1]=9;
+    y[1]=10;
+    x[2]=8;
+    y[2]=10;
+    int ular=3 ;
+    string a[20][20];//lebar map
+    char ctr='d';//gerakan awal snake
+    while (x[0]!=0 && x[0]!=19 && y[0]!=0 && y[0]!=19)
+    {
+        for (int i=0;i<20;i++)
+        {
+            for (int j=0;j<20;j++)                           
+            {                                   
+                if (i==0 || j==0 || i==19 || j==19)                     
+                     a[i][j]="* ";//mencetak batas pinggir
+                else
+                     a[i][j]="  ";//mencetak jalan
+            }                   
+        }              
+        a[poin][pion]="o "; //mencetak makanan       
+        for(int s=ular;s>0;s--)
+        {
+            x[s]=x[s-1];//agar badan dan ekor mengikuti kepala snake
+            y[s]=y[s-1];
+        }
+        for (int r=0;r<=ular;r++)
+        {
+            a[y[r]][x[r]]="* ";
+        }
+        if (kbhit())//meminta inputan w,a,s,d untuk gerak snake
+        {
+            ctr=getch();
+        }
+        if(ctr=='w')
+            y[0]--;
+        if(ctr=='s')
+            y[0]++;
+        if(ctr=='a')
+            x[0]--;
+        if(ctr=='d')
+            x[0]++;
+        for(int m=0;m<20;m++)
+        {
+            for (int n=0;n<20;n++)
+            {
+                cout << a[m][n]; //menampilkan game
+            }
+        cout <<endl;
+        }
+        if (a[0][0]==a[poin][pion])
+        {
+            ular++;
+            poin=rand()%19;
+            if (poin%19==0)
+                poin++;
+            pion=rand()%19;
+            if (pion%19==0)
+                pion++;
+            score=score+1;
+         }
+        for (int gh=1;gh<ular;gh++) //agar snake mati saat menabrak dirinya
+        {
+            if (x[0]==x[gh] && y[0]==y[gh] )
+            {
+                x[0]=0;
+            }
+        }
+    Sleep(25);
+    system("cls");
+    }
+    cout << "GAMEOVER!" <<endl;
+    cout << "Score = " << score<<endl;           
+    if (score > highscore)
+    {
+        highscore=score;
+    }
+    cout << "High Score = "<<highscore<<endl;
+    cout << "retry (y/n)"; cin >>retry;
+    }
+    return 0;
+}
+
+
+Here's the preview about the result of the program.
+/* The Mind Reader */
+
+#include<conio.h>
+#include<stdio.h>
+#include<dos.h>
+#include<stdlib.h>
+
+void First_Card(void);void Second_Card(void);
+void Third_Card(void);void Fourth_Card(void);
+void Fifth_Card(void);void Sixth_Card(void);
+void Analyze(void); Check(void);
+void main(void)
+{  int ans=0,in=0;
+   clrscr();
+   _setcursortype(_NOCURSOR);
+   First_Card();
+     in=Check(); if (in==0) ans+=1;
+   Second_Card();
+     in=Check(); if (in==0) ans+=2;
+   Third_Card();
+     in=Check(); if (in==0) ans+=4;
+   Fourth_Card();
+     in=Check(); if (in==0) ans+=8;
+   Fifth_Card();
+     in=Check(); if (in==0) ans+=16;
+   Sixth_Card();
+     in=Check(); if (in==0) ans+=32;
+     textcolor(WHITE);textbackground(BLACK);
+     clrscr(); Analyze();     clrscr();
+   if(ans>60) {gotoxy(20,12);printf("You Entered Incorrect Information.");}
+   else
+   {gotoxy(28,13);printf("Your No Is : "%d"",ans);}
+
+}
+
+void First_Card(void)
+{
+gotoxy(25,6);  printf("ษอออออออออออออออออออออออออออออป");
+gotoxy(25,7);  printf("บ  C O M P U T E R   G A M E  บ");
+gotoxy(25,8);  printf("ฬออออหออออหออออหออออหออออหออออน");
+gotoxy(25,9);  printf("บ 1  บ 3  บ 5  บ 7  บ 9  บ 11 บ");
+gotoxy(25,10); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,11); printf("บ 13 บ 15 บ 17 บ 19 บ 21 บ 23 บ");
+gotoxy(25,12); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,13); printf("บ 25 บ 27 บ 29 บ 31 บ 33 บ 35 บ");
+gotoxy(25,14); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,15); printf("บ 37 บ 39 บ 41 บ 43 บ 45 บ 47 บ");
+gotoxy(25,16); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,17); printf("บ 49 บ 51 บ 53 บ 55 บ 57 บ 59 บ");
+gotoxy(25,18); printf("ศออออสออออสออออสออออสออออสออออผ");
+}
+
+void Second_Card(void)
+{
+gotoxy(25,6);  printf("ษอออออออออออออออออออออออออออออป");
+gotoxy(25,7);  printf("บ  C O M P U T E R   G A M E  บ");
+gotoxy(25,8);  printf("ฬออออหออออหออออหออออหออออหออออน");
+gotoxy(25,9);  printf("บ 2  บ 3  บ 6  บ 7  บ 10 บ 11 บ");
+gotoxy(25,10); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,11); printf("บ 14 บ 15 บ 18 บ 19 บ 22 บ 23 บ");
+gotoxy(25,12); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,13); printf("บ 25 บ 27 บ 30 บ 31 บ 34 บ 35 บ");
+gotoxy(25,14); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,15); printf("บ 38 บ 39 บ 42 บ 43 บ 46 บ 47 บ");
+gotoxy(25,16); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,17); printf("บ 50 บ 51 บ 54 บ 55 บ 58 บ 59 บ");
+gotoxy(25,18); printf("ศออออสออออสออออสออออสออออสออออผ");
+}
+
+void Third_Card(void)
+{
+gotoxy(25,6);  printf("ษอออออออออออออออออออออออออออออป");
+gotoxy(25,7);  printf("บ  C O M P U T E R   G A M E  บ");
+gotoxy(25,8);  printf("ฬออออหออออหออออหออออหออออหออออน");
+gotoxy(25,9);  printf("บ 4  บ 5  บ 6  บ 7  บ 12 บ 13 บ");
+gotoxy(25,10); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,11); printf("บ 14 บ 15 บ 20 บ 21 บ 22 บ 23 บ");
+gotoxy(25,12); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,13); printf("บ 28 บ 29 บ 30 บ 31 บ 36 บ 37 บ");
+gotoxy(25,14); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,15); printf("บ 38 บ 39 บ 44 บ 45 บ 46 บ 47 บ");
+gotoxy(25,16); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,17); printf("บ 52 บ 53 บ 54 บ 55 บ 60 บ 60 บ");
+gotoxy(25,18); printf("ศออออสออออสออออสออออสออออสออออผ");
+}
+
+void Fourth_Card(void)
+{
+gotoxy(25,6);  printf("ษอออออออออออออออออออออออออออออป");
+gotoxy(25,7);  printf("บ  C O M P U T E R   G A M E  บ");
+gotoxy(25,8);  printf("ฬออออหออออหออออหออออหออออหออออน");
+gotoxy(25,9);  printf("บ 8  บ 9  บ 10 บ 11 บ 12 บ 13 บ");
+gotoxy(25,10); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,11); printf("บ 14 บ 15 บ 24 บ 25 บ 26 บ 27 บ");
+gotoxy(25,12); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,13); printf("บ 28 บ 29 บ 30 บ 31 บ 40 บ 41 บ");
+gotoxy(25,14); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,15); printf("บ 42 บ 43 บ 44 บ 45 บ 46 บ 47 บ");
+gotoxy(25,16); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,17); printf("บ 56 บ 57 บ 58 บ 59 บ 60 บ 60 บ");
+gotoxy(25,18); printf("ศออออสออออสออออสออออสออออสออออผ");
+}
+
+void Fifth_Card(void)
+{
+gotoxy(25,6);  printf("ษอออออออออออออออออออออออออออออป");
+gotoxy(25,7);  printf("บ  C O M P U T E R   G A M E  บ");
+gotoxy(25,8);  printf("ฬออออหออออหออออหออออหออออหออออน");
+gotoxy(25,9);  printf("บ 16 บ 17 บ 18 บ 19 บ 20 บ 21 บ");
+gotoxy(25,10); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,11); printf("บ 22 บ 23 บ 24 บ 25 บ 26 บ 27 บ");
+gotoxy(25,12); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,13); printf("บ 28 บ 29 บ 30 บ 31 บ 48 บ 49 บ");
+gotoxy(25,14); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,15); printf("บ 50 บ 51 บ 52 บ 53 บ 54 บ 55 บ");
+gotoxy(25,16); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,17); printf("บ 56 บ 57 บ 58 บ 59 บ 60 บ 60 บ");
+gotoxy(25,18); printf("ศออออสออออสออออสออออสออออสออออผ");
+}
+void Sixth_Card(void)
+{
+gotoxy(25,6);  printf("ษอออออออออออออออออออออออออออออป
+52 บ 53 บ 54 บ 55 บ");
+gotoxy(25,16); printf("ฬออออฮออออฮออออฮออออฮออออฮออออน");
+gotoxy(25,17); printf("บ 56 บ 57 บ 58 บ 59 บ 60 บ 60 บ");
+gotoxy(25,18); printf("ศออออสออออสออออสออออสออออสออออผ");
+}
+Check(void)
+{
+  int loop,key,index=0;
+  char *menu[]={" Yes "," No "};
+  textcolor(WHITE);
+  textbackground(CYAN);
+  while(1)
+  { for (loop=0;loop<2;loop++)
+    { if (loop==index)
+	textbackground(YELLOW);
+      else
+	textbackground(CYAN);
+      gotoxy(33+loop*10,20);cprintf("%s",menu[loop]);
+    }
+    key=getch();
+    switch(key)
+    { case 75:
+	index--;if (index<0) index=1;break;
+      case 77:
+	index++;if (index>1) index=0;break;
+      case 13: return index;
+    }
+  }
+}
+void Analyze(void)
+{
+ gotoxy(30,10); printf("Analyzing Result...");
+ gotoxy(25,11); printf("ษอออออออออออออออออออออออออออออป");
+ gotoxy(25,12); printf("บ ฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐฐ บ");
+ gotoxy(25,13); printf("ศอออออออออออออออออออออออออออออผ");
+ for(int a=27;a<=53;a++)
+ { delay(100);
+   gotoxy(a,12);printf("%c",219);
+ }
+}
+/* Maze */
+
+#include 
+#include 
+#include "maze.h"
+
+
+// =============================> Maze Objects <====================
+// Maze object data members:
+//   int _max_row;
+//   int _max_col;
+//   char _map[MAX_MAZE_DIM+1][MAX_MAZE_DIM+1];
+
+// ============================> report_err <=======================
+static void report_err(const char* message)
+{  
+  cout << "FATAL ERROR (Maze): " << message << endl;
+  exit(1);
+}
+
+// ========================> member functions <=====================
+
+// ========================> Constructors <==================
+Maze::Maze()
+{
+  *this = Maze(7,7);
+}
+
+Maze::Maze(int rows, int cols)
+{
+  if (rows > MAX_MAZE_DIM || cols > MAX_MAZE_DIM)
+    report_err("Attempted to create overly large Maze");
+  _max_row = rows;
+  _max_col = cols;
+  for(int row = 1; row <= rows; row++)
+    for(int col = 1; col <= cols; col++)
+      _map[row][col] = '.';
+}
+
+// =======================> max_row <========================
+int Maze::max_row() const
+{ return _max_row;
+}
+
+// ======================> max_col <=========================
+int Maze::max_col() const
+{ return _max_col;
+}
+
+// =====================> is_open <==========================
+int Maze::is_open(int i, int j) const
+// PRE:  VALID_POS(i, j)
+// POST: FCTVAL == position (i, j) of this maze is open (contains a '.')
+{
+   if (i < 1 || i > _max_row)
+   		report_err("Attempted to check cell row outside of maze dimensions");
+   		
+   if (j < 1 || j > _max_col)
+   		report_err("Attempted to check cell column outside of maze dimensions");
+   		 
+   if (_map[i][j] == '.')	// if current spot in maze is passible
+   		return (1);			//    return 1 ==> TRUE
+   else
+   		return (0);
+}
+
+// ====================> mark <==============================
+void Maze::mark(int row, int col, char marker)
+{
+  if (!is_open(row,col))
+    report_err("Attempt to mark an non-open Maze cell");
+  _map[row][col] = marker;
+}
+
+// ===================> unmark <=============================
+void Maze::unmark(int row, int col)
+// PRE: VALID_POS(row, col) &&
+//      _map[row][col] != '*'
+// POST: is_open(row, col)
+{
+	if (_map[row][col] != '*')
+		_map[row][col] = '.';		// reset current spot in maze to passible
+	
+	return;
+}
+
+// ===================> stream output <======================
+ostream& operator<<(ostream& stream, Maze m)
+{ 
+  for(int row = 1; row <= m._max_row; row++)
+    { 
+      for(int col = 1; col <= m._max_col; col++)
+		stream.put(m._map[row][col]);
+      stream << endl;
+    }
+  stream << flush;
+  return stream;
+}
+
+// ==================> stream input <=======================
+istream& operator>>(istream& stream, Maze& m)
+{ char ch;
+
+  for(int row = 1; row <= m._max_row; row++)
+    { 
+      for(int col = 1; col <= m._max_col; col++)
+	{ 
+	  stream.get(ch);
+	  if (ch == '.' || ch == ' ')
+	    m._map[row][col] = '.';
+	  else
+	    m._map[row][col] = '*';
+	}
+      stream.ignore(50,'\n');
+    }
+  return stream;
+}
+/* Shiffling Cards - Its a cool game to see how fat can your mind
+runs when you see cards shuffling in front of you.
+Nice game for a beginner like me */
+
+#include<iostream.h>
+#include<conio.h>
+#include<graphics.h>
+#include<dos.h>
+#include<stdlib.h>
+#include<time.h>
+
+void swap(char [],char []);
+
+int card1[] = { 20,20 , 50,20 , 50,100 , 20,100 , 20,20 };
+int card2[] = { 80,20 , 110,20 , 110,100 , 80,100 , 80,20 };
+int card3[] = { 140,20 , 170,20 , 170,100 , 140,100 , 140,20 };
+
+char val[3][2]={ "1" , "2", "3" };
+
+void main()
+   {
+   clrscr();
+   char count[2]="0";
+   int swapnum=0;         //for number of times to swap the cards
+   int driver,mode;
+
+   driver=DETECT;
+
+   initgraph(&driver , &mode , "c:\tc\bgi");
+
+   setfillstyle(SOLID_FILL,YELLOW);
+   fillpoly(5,card1);
+   fillpoly(5,card2);
+   fillpoly(5,card3);
+
+   settextstyle(GOTHIC_FONT,HORIZ_DIR,6);
+   setcolor(BLUE);
+   moveto(25,25);
+   outtext(val[0]);
+   moveto(85,25);
+   outtext(val[1]);
+   moveto(145,25);
+   outtext(val[2]);
+
+   do
+      {
+      int num=0;
+      int choice[2];
+      count[0]++;
+
+      delay(1500);
+
+      settextstyle(DEFAULT_FONT,HORIZ_DIR,2);
+      moveto(20,150);
+      outtext("No. of Times Cards have been swapped:");
+      settextstyle(DEFAULT_FONT,HORIZ_DIR,3);
+      moveto(20 + swapnum*20,170);
+      outtext(count);
+      setfillstyle(SOLID_FILL,YELLOW);
+      fillpoly(5,card1);
+      fillpoly(5,card2);
+      fillpoly(5,card3);
+
+      do
+	 {
+	 randomize();
+	 choice[num]= (rand() + num) % 3;
+
+	 switch(choice[num])
+	    {
+	    case 0:
+	       setfillstyle(CLOSE_DOT_FILL,BLUE);
+	       fillpoly(5,card1);
+	       break;
+	    case 1:
+	       setfillstyle(CLOSE_DOT_FILL,BLUE);
+	       fillpoly(5,card2);
+	       break;
+	    case 2:
+	       setfillstyle(CLOSE_DOT_FILL,BLUE);
+	       fillpoly(5,card3);
+	       break;
+	    }
+	 num++;
+	 }while(num<2);
+
+      swap(val[(choice[0])],val[(choice[1])]);
+
+      }while(swapnum++ < 6);
+
+   settextstyle(DEFAULT_FONT,HORIZ_DIR,3);
+   moveto(20,200);
+   outtext("What is card number 2");
+   char ans;
+   ans=getch();
+   if(ans==val[1][0])
+      {
+      moveto(20,230);
+      outtext("HURRAY");
+      }
+   else
+      {
+      moveto(20,230);
+      outtext("YOU DUMBO");
+      }
+
+   getch();
+   closegraph();
+   }
+
+void swap(char a[], char b[])
+   {
+   char c;
+   c=a[0];
+   a[0]=b[0];
+   b[0]=c;
+   }

@@ -1,0 +1,4 @@
+﻿  Spikotajs.cpp
+C:\Users\228to\source\repos\Eminems31\Eminems31\Spikotajs.cpp(16,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\228to\source\repos\Eminems31\Eminems31\Spikotajs.cpp(41,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Eminems31.vcxproj -> C:\Users\228to\source\repos\Eminems31\x64\Debug\Eminems31.exe
